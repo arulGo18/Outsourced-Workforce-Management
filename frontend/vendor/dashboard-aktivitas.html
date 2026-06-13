@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktivitas</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img
+        src="logomanajemen.png"
+        alt="CDX Express Logo">
+  </div>
+  <div class="menu">
+    <div class="menu-category">AKTIVITAS</div>
+    <a href="dashboard-daftar-id.html">Daftar ID Pekerja</a>
+    <a href="dashboard-aktivasi-id.html" >Aktivasi ID</a>
+    <a href="dashboard-mutasi-id.html">Mutasi ID</a>
+    <div class="menu-category">MANAJEMEN</div>
+    <a href="dashboard-data-pekerja.html">Data Pekerja</a>
+    <a href="dashboard-aktivitas.html" class="active">Riwayat</a>
+    <div class="menu-category">AKUN</div>
+    <a href="dashboard-akun.html">Akun Pengguna</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="navbar">
+    <div>Riwayat Aktivitas</div>
+    <div>👤 Vendor</div>
+  </div>
+
+  <div class="card">
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="Cari Nama / ID">
+      
+      <select id="filterActivity">
+        <option value="">Semua Aktivitas</option>
+        <option value="CREATE">Create</option>
+        <option value="ACTIVATE">Aktivasi</option>
+        <option value="MUTATION">Mutasi</option>
+        <option value="EDIT_CONTRACT">Edit Kontrak</option>
+      </select>
+    </div>
+
+    <!-- TABLE -->
+    <table id="activityTable">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>NIK</th>
+          <th>BPO Area</th>
+          <th>Aktivitas</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- DATA DARI API -->
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      &lt; 1 2 3 &gt;
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ============================
+// LOAD DATA DARI BACKEND
+// ============================
+let allData = [];
+
+const user = JSON.parse(localStorage.getItem("user"));
+fetch(`/activities?vendor=${user.vendor}`)
+
+.then(res => res.json())
+.then(data => {
+  allData = data;
+  renderTable(data);
+})
+.catch(() => {
+  alert("Gagal mengambil data aktivitas");
+});
+
+
+// ============================
+// RENDER TABLE
+// ============================
+function renderTable(data) {
+
+  const tbody = document.querySelector("#activityTable tbody");
+
+  tbody.innerHTML = "";
+
+  data.forEach(item => {
+
+    // =========================
+    // STATUS BADGE
+    // =========================
+    let badgeClass = "";
+
+    if (item.status === "SUCCESS") {
+
+      badgeClass = "success";
+
+    } else if (item.status === "INVALID") {
+
+      badgeClass = "danger";
+
+    }
+
+
+    // =========================
+    // DETAIL BUTTON
+    // =========================
+    let detailButton = "";
+
+    if (item.status === "INVALID" || (item.activity === "CREATE" &&item.status === "SUCCESS")) {
+      detailButton = `
+        <button class="btn-detail"
+          onclick="showDetail('${item.description}')">
+          Detail
+        </button>
+      `;
+
+    }
+
+
+    // =========================
+    // TABLE ROW
+    // =========================
+    const row = `
+      <tr>
+
+        <td>${item.tanggal}</td>
+
+        <td>${item.nama}</td>
+
+        <td>${item.nik}</td>
+
+        <td>${item.vendor}</td>
+
+        <td>${item.activity}</td>
+
+        <td>
+          <span class="badge ${badgeClass}">
+            ${item.status}
+          </span>
+        </td>
+
+        <td>${detailButton}</td>
+
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
+
+  });
+
+}
+
+
+// ============================
+// SEARCH FILTER
+// ============================
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function() {
+  applyFilter();
+});
+
+
+// ============================
+// ACTIVITY FILTER
+// ============================
+const filterActivity = document.getElementById("filterActivity");
+
+filterActivity.addEventListener("change", function() {
+  applyFilter();
+});
+
+
+// ============================
+// FILTER FUNCTION
+// ============================
+function applyFilter() {
+
+  const searchValue = searchInput.value.toLowerCase();
+  const activityValue = filterActivity.value;
+
+  const filtered = allData.filter(item => {
+
+    const matchSearch =
+      item.nama.toLowerCase().includes(searchValue) ||
+      item.nik.toLowerCase().includes(searchValue);
+
+    const matchActivity =
+      activityValue === "" || item.activity === activityValue;
+
+    return matchSearch && matchActivity;
+  });
+
+  renderTable(filtered);
+}
+
+function showDetail(message) {
+
+  alert(message);
+
+}
+</script>
+
+</body>
+</html>

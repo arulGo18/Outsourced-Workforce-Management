@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutasi ID</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img
+        src="logomanajemen.png"
+        alt="CDX Express Logo">
+  </div>
+  <div class="menu">
+    <div class="menu-category">AKTIVITAS</div>
+    <a href="dashboard-daftar-id.html" >Daftar ID Pekerja</a>
+    <a href="dashboard-aktivasi-id.html">Aktivasi ID</a>
+    <a href="dashboard-mutasi-id.html" class="active">Mutasi ID</a>
+    <div class="menu-category">MANAJEMEN</div>
+    <a href="dashboard-data-pekerja.html">Data Pekerja</a>
+    <a href="dashboard-aktivitas.html">Riwayat</a>
+    <div class="menu-category">AKUN</div>
+    <a href="dashboard-akun.html">Akun Pengguna</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="navbar">
+    <div>Mutasi ID Pekerja</div>
+    <div>👤 Vendor</div>
+  </div>
+
+  <div class="card">
+
+    <p class="note">
+      Mutasi hanya digunakan untuk memindahkan lokasi pekerja, bukan mengganti departemen.
+    </p>
+
+    <!-- CHECK ID -->
+    <div class="check-row">
+      <input type="text" id="idInput" placeholder="Masukkan ID Pekerja">
+      <button class="btn" onclick="checkID()">Check</button>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>NIK</label>
+        <input type="text" id="nik" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Agency</label>
+        <input type="text" id="agency" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Departemen</label>
+        <input type="text" id="dept" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Lokasi Saat Ini</label>
+        <input type="text" id="lokasi" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Mutasi ke Lokasi</label>
+        <select id="lokasi_baru">
+          <option value="">Pilih Lokasi Mutasi</option>
+          <option value="1">Cakung 1</option>
+          <option value="2">Cakung 2</option>
+          <option value="3">Cakung 4</option>
+          <option value="4">Cakung 5</option>
+          <option value="5">Yos Sudarso Return</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button class="btn btn-main" onclick="mutasiID()">Mutasi</button>
+
+  </div>
+
+</div>
+
+<script>
+
+// =========================
+// PROTEKSI LOGIN
+// =========================
+const user = JSON.parse(
+
+    localStorage.getItem(
+        "user"
+    )
+);
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!user) {
+
+    alert(
+        "Silakan login terlebih dahulu"
+    );
+
+    window.location.href =
+    "dashboard-login.html";
+}
+
+</script>
+
+<script>
+function checkID() {
+
+  const id = document.getElementById("idInput").value.trim();
+
+  fetch(`/worker/${id}`)
+  .then(res => res.json())
+  .then(data => {
+
+    if (data.message) {
+      alert("ID tidak ditemukan");
+      return;
+    }
+
+    document.getElementById("nama").value = data.nama;
+    document.getElementById("nik").value = data.nik;
+    document.getElementById("agency").value = data.agency;
+    document.getElementById("dept").value = data.dept;
+
+    // ❗ sementara isi default dulu
+    document.getElementById("lokasi").value = data.lokasi;
+
+  })
+  .catch(() => {
+    alert("Gagal mengambil data");
+  });
+}
+</script>
+
+<script>
+function mutasiID() {
+
+  const id = document.getElementById("idInput").value.trim();
+  const placement_id = document.getElementById("lokasi_baru").value;
+  
+
+  if (!id || !placement_id) {
+    alert("Lengkapi data");
+    return;
+  }
+
+  fetch("/mutasi-worker", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      id_pekerja: id,
+      placement_id: parseInt(placement_id)
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+  })
+  .catch(() => {
+    alert("Gagal mutasi");
+  });
+}
+</script>
+
+</body>
+</html>

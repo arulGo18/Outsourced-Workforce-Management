@@ -1,0 +1,524 @@
+/* =========================================
+   RESET
+========================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#333;
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar{
+    width:250px;
+    min-width:250px;
+    background:#2196f3;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    overflow-y:auto;
+}
+
+.sidebar-logo{
+    text-align:center;
+    padding:25px 15px;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.sidebar-logo img{
+    width:130px;
+    max-width:100%;
+}
+
+.menu{
+    padding:15px 0;
+}
+
+.menu-category{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:15px 25px 8px;
+    opacity:.8;
+}
+
+.menu a{
+    display:block;
+    text-decoration:none;
+    color:white;
+    padding:14px 25px;
+    transition:.3s;
+    font-size:15px;
+}
+
+.menu a:hover{
+    background:#1976d2;
+}
+
+.menu a.active{
+    background:#42a5f5;
+    border-left:4px solid white;
+    font-weight:600;
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    min-height:100vh;
+}
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+    font-weight:600;
+    font-size:18px;
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.card{
+    background:white;
+    margin:25px;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.card h3{
+    margin-bottom:20px;
+}
+
+/* =========================================
+   NOTE
+========================================= */
+
+.note{
+    background:#e3f2fd;
+    color:#1565c0;
+    border-left:5px solid #2196f3;
+    padding:15px;
+    margin-bottom:25px;
+    border-radius:8px;
+    line-height:1.6;
+}
+
+/* =========================================
+   FORM GRID
+========================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:#444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:12px 15px;
+    border:1px solid #d6d6d6;
+    border-radius:8px;
+    outline:none;
+    font-size:14px;
+    transition:.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#2196f3;
+}
+
+.form-group textarea{
+    resize:vertical;
+}
+
+/* =========================================
+   CHECK ROW
+========================================= */
+
+.check-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.check-row input{
+    flex:1;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.btn,
+.btn-main,
+.btn-detail{
+    border:none;
+    cursor:pointer;
+    border-radius:8px;
+    transition:.3s;
+    font-weight:600;
+}
+
+.btn{
+    background:#2196f3;
+    color:white;
+    padding:12px 20px;
+}
+
+.btn:hover{
+    background:#1976d2;
+}
+
+.btn-main{
+    margin-top:25px;
+    background:#2196f3;
+    color:white;
+    padding:14px 30px;
+}
+
+.btn-main:hover{
+    background:#1976d2;
+}
+
+.btn-detail{
+    background:#42a5f5;
+    color:white;
+    padding:8px 14px;
+}
+
+.btn-detail:hover{
+    background:#1e88e5;
+}
+
+/* =========================================
+   FILTER
+========================================= */
+
+.filter-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.filter-bar input,
+.filter-bar select{
+    padding:10px 15px;
+    border:1px solid #d6d6d6;
+    border-radius:8px;
+    min-width:180px;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+thead{
+    background:#2196f3;
+    color:white;
+}
+
+thead th{
+    padding:14px;
+    text-align:left;
+}
+
+tbody td{
+    padding:12px 14px;
+    border-bottom:1px solid #ececec;
+}
+
+tbody tr:hover{
+    background:#f8fbff;
+}
+
+/* =========================================
+   BADGE
+========================================= */
+
+.badge{
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:12px;
+    font-weight:600;
+}
+
+.success{
+    background:#2e7d32;
+}
+
+.warning{
+    background:#f57c00;
+}
+
+.danger{
+    background:#d32f2f;
+}
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.pagination{
+    margin-top:20px;
+    text-align:center;
+    color:#666;
+    font-weight:600;
+}
+
+/* =========================================
+   AKUN PAGE
+========================================= */
+
+.title{
+    font-size:28px;
+    font-weight:700;
+    margin:25px;
+}
+
+.content{
+    display:flex;
+    gap:25px;
+    padding:0 25px 25px;
+}
+
+.left{
+    width:250px;
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    text-align:center;
+}
+
+.avatar{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:#2196f3;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:50px;
+    margin:20px auto;
+}
+
+.info{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid #ececec;
+}
+
+.label{
+    font-weight:600;
+    color:#555;
+}
+
+.value{
+    color:#333;
+}
+
+/* =========================================
+   UPLOAD BOX
+========================================= */
+
+.upload-box{
+    border:2px dashed #2196f3;
+    border-radius:12px;
+    padding:25px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.upload-box:hover{
+    background:#f3f9ff;
+}
+
+.upload-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.upload-text{
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+/* =========================================
+   MODAL
+========================================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    z-index:999;
+}
+
+.modal-content{
+    background:white;
+    width:700px;
+    max-width:95%;
+    margin:50px auto;
+    border-radius:16px;
+    padding:25px;
+    position:relative;
+    max-height:85vh;
+    overflow:auto;
+}
+
+.close{
+    position:absolute;
+    right:20px;
+    top:15px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* =========================================
+   LOGOUT BUTTON
+========================================= */
+
+.logout{
+    margin-top:auto;
+    padding:20px;
+}
+
+.logout button{
+    width:100%;
+    background:#1565c0;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logout button:hover{
+    background:#0d47a1;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media(max-width:992px){
+
+    .sidebar{
+        width:220px;
+        min-width:220px;
+    }
+
+    .main{
+        margin-left:220px;
+        width:calc(100% - 220px);
+    }
+
+    .content{
+        flex-direction:column;
+    }
+
+    .left{
+        width:100%;
+    }
+}
+
+@media(max-width:768px){
+
+    body{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .navbar{
+        padding:0 15px;
+    }
+
+    .card{
+        margin:15px;
+        padding:20px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .check-row{
+        flex-direction:column;
+    }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Vendor - CDX Express</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/frontend/vendor/css/login.css">
+</head>
+<body>
+
+<div class="container">
+    
+  <div class="logo">CDX <span>Express</span></div>
+  <h2>Login PIC Area</h2>
+
+  <div class="avatar">👷</div>
+
+  <form id="loginForm">
+      
+    <div class="form-group">
+      <label>Login As Vendor</label>
+      <select id="vendor">
+        <option value="">Pilih Vendor</option>
+        <option value="Vendor A">Vendor A</option>
+        <option value="Vendor B">Vendor B</option>
+      </select>
+      <div class="error-message" id="vendorError">Pilih vendor terlebih dahulu</div>
+    </div>
+
+    <div class="form-group">
+      <label>PIC BPO Vendor</label>
+      <input type="text" id="pic" placeholder="Masukkan PIC">
+      <div class="error-message" id="picError">PIC tidak boleh kosong</div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Masukkan Password">
+      <div class="error-message" id="passwordError">Password tidak boleh kosong</div>
+    </div>
+
+    <button type="button" class="btn" onclick="login()">Login</button>
+
+  </form>
+
+  <div class="footer">
+    © 2026 CDX Express
+  </div>
+
+</div>
+
+<script>
+function login() {
+  const vendor = document.getElementById('vendor').value.trim();
+  const pic = document.getElementById('pic').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const btn = document.querySelector('.btn');
+
+  document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('input, select').forEach(el => el.classList.remove('error'));
+
+  let isValid = true;
+
+  if (!vendor) {
+    document.getElementById('vendorError').classList.add('show');
+    document.getElementById('vendor').classList.add('error');
+    isValid = false;
+  }
+
+  if (!pic) {
+    document.getElementById('picError').classList.add('show');
+    document.getElementById('pic').classList.add('error');
+    isValid = false;
+  }
+
+  if (!password) {
+    document.getElementById('passwordError').classList.add('show');
+    document.getElementById('password').classList.add('error');
+    isValid = false;
+  }
+
+  if (!isValid) return;
+
+  btn.classList.add('loading');
+  btn.innerHTML = '<span class="spinner"></span>Logging in...';
+
+  fetch("/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      vendor: vendor,
+      pic: pic,
+      password: password
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Login gagal");
+    return res.json();
+  })
+  
+  .then(data => {
+    localStorage.setItem("user", JSON.stringify({
+
+    pic: data.pic,
+    vendor,
+
+    lokasi_gudang: data.lokasi_gudang,
+    status: data.status
+
+}));
+    window.location.href = "/frontend/vendor/dashboard-daftar-id.html";
+  })
+  .catch(() => {
+    alert("Login gagal, cek data!");
+  });
+}
+</script>
+
+</body>
+</html>

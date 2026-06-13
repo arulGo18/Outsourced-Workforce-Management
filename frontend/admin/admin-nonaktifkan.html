@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonaktifkan ID - CDX Express</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="imglogo/logomanajemen.png" alt="CDX Express Logo">
+        </div>
+        <div class="menu-category">MANAJEMEN</div>
+        <a href="admin-kebutuhan-plan.html" class="menu-item">Plan Actual</a>
+        <div class="menu-category">AKTIFITAS</div>
+        <a href="admin-verifikasi-id.html" class="menu-item">Verifikasi ID Pekerja</a>
+        <a href="admin-pekerja-vendor.html" class="menu-item">Plan Pekerja Vendor</a>
+        <a href="admin-buffer.html" class="menu-item">Buffer Pekerja Vendor</a>
+        <a href="admin-takeout.html" class="menu-item">Take Out Pekerja</a>
+        <a href="admin-nonaktifkan.html" class="menu-item active">Nonaktifkan ID Pekerja</a>
+        <div class="menu-category">RIWAYAT</div>
+        <a href="admin-data-aktivitas.html" class="menu-item">Data Aktifitas</a>
+        <div class="menu-category">AKUN</div>
+        <a href="admin-akun.html" class="menu-item">Akun Admin</a>
+
+        <a href="login-admin.html" class="logout-btn">Logout</a>
+    </aside>
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-links">
+                <a href="#" class="active">Nonaktifkan ID</a>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+            </div>
+        </header>
+        <div class="dashboard-body">
+            <h2 class="page-title">Nonaktifkan ID Pekerja</h2>
+            <p class="page-desc">Lakukan Penonaktifan ID Pekerja, Jika Pekerja Tersebut melakukan Tindakan Tidak Terpuji saat Bekerja.</p>
+            <div class="form-container">
+                <form>
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="text" class="form-control" placeholder="Masukkan Tanggal (yyyy-mm-dd)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Shift</label>
+                        <select class="form-control">
+                            <option value="">Pilih Shift</option>
+                            <option style="color: black;">Shift 1 (08-16)</option>
+                            <option style="color: black;">Shift 2 (16-00)</option>
+                            <option style="color: black;">Shift 3 (00-08)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Agensi</label>
+                        <select class="form-control">
+                            <option value="">Pilih Agensi</option>
+                            <option style="color: black;">Vendor A</option>
+                            <option style="color: black;">Vendor B</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ID Pekerja</label>
+                        <input
+                        type="text"
+                        id="id_pekerja"
+                        class="form-control"
+                        placeholder="Masukkan ID Pekerja">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Perihal Penonaktifan ID</label>
+                        <textarea class="form-control" rows="3" placeholder="Jelaskan alasan penonaktifan..."></textarea>
+                    </div>
+
+                    <button
+                        type="button" 
+                        class="btn-action"
+                        onclick="nonaktifkanWorker()">Nonaktifkan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<script>
+
+// =========================
+// PROTEKSI LOGIN ADMIN
+// =========================
+const adminData = JSON.parse(
+
+    localStorage.getItem(
+        "adminData"
+    )
+);
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!adminData) {
+
+    alert(
+        "Silakan login admin terlebih dahulu"
+    );
+
+    window.location.href =
+    "login-admin.html";
+}
+
+</script>
+
+
+<script>
+
+async function nonaktifkanWorker() {
+
+    // =========================
+    // AMBIL ID PEKERJA
+    // =========================
+    const id_pekerja =
+        document.getElementById(
+            "id_pekerja"
+        ).value;
+
+
+    // =========================
+    // VALIDASI
+    // =========================
+    if (!id_pekerja) {
+
+        alert("Masukkan ID pekerja");
+
+        return;
+    }
+
+
+    try {
+
+        // =========================
+        // FETCH API
+        // =========================
+        const response = await fetch(
+
+            "/nonaktifkan-worker",
+
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    id_pekerja
+                })
+            }
+        );
+
+
+        const result =
+            await response.json();
+        
+        console.log(result);
+        // =========================
+        // JIKA SUCCESS
+        // =========================
+        if (result.success) {
+            alert(
+                result.message
+            );
+        } else {
+            alert(
+                result.message ||
+                "Gagal menonaktifkan worker"
+            );
+        }
+
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert("Gagal koneksi ke server");
+
+    }
+
+}
+
+</script>
+</body>
+</html>

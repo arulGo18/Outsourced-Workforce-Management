@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Aktivitas - CDX Express</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="imglogo/logomanajemen.png" alt="CDX Express Logo">
+        </div>
+        <div class="menu-category">MANAJEMEN</div>
+        <a href="admin-kebutuhan-plan.html" class="menu-item">Plan Actual</a>
+        <div class="menu-category">AKTIFITAS</div>
+        <a href="admin-verifikasi-id.html" class="menu-item">Verifikasi ID Pekerja</a>
+        <a href="admin-pekerja-vendor.html" class="menu-item">Plan Pekerja Vendor</a>
+        <a href="admin-buffer.html" class="menu-item">Buffer Pekerja Vendor</a>
+        <a href="admin-takeout.html" class="menu-item">Take Out Pekerja</a>
+        <a href="admin-nonaktifkan.html" class="menu-item">Nonaktifkan ID Pekerja</a>
+        <div class="menu-category">RIWAYAT</div>
+        <a href="admin-data-aktivitas.html" class="menu-item active">Data Aktifitas</a>
+        <div class="menu-category">AKUN</div>
+        <a href="admin-akun.html" class="menu-item">Akun Admin</a>
+
+        <a href="login-admin.html" class="logout-btn">Logout</a>
+    </aside>
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-links">
+                <a href="#" class="active">Data Pekerja Vendor</a>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+            </div>
+        </header>
+        <div class="dashboard-body">
+            <h2 class="page-title">Data Pekerja Gudang - Yos Sudarso</h2>
+            <div class="search-bar">
+                <input 
+                type="text"
+                id="searchInput"
+                placeholder="Cari ID atau Nama"
+                onkeyup="searchAttendance()">
+                <select><option>Semua</option><option>Active</option><option>Inactive</option></select>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Shift</th>
+                        <th>ID Pekerja</th>
+                         <th>Nama</th>
+                        <th>Vendor</th>
+                        <th>Lokasi</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTable"></tbody>
+            </table>
+
+            <div class="pagination">
+                <button>&lt;</button>
+                <button class="active">1</button>
+                <button>&gt;</button>
+            </div>
+        </div>
+    </main>
+
+<script>
+
+// =========================
+// PROTEKSI LOGIN ADMIN
+// =========================
+const adminData = JSON.parse(
+
+    localStorage.getItem(
+        "adminData"
+    )
+);
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!adminData) {
+
+    alert(
+        "Silakan login admin terlebih dahulu"
+    );
+
+    window.location.href =
+    "login-admin.html";
+}
+
+</script>
+
+<script>
+
+let allAttendances = [];
+
+async function loadAttendances() {
+
+    try {
+
+        // =========================
+        // FETCH DATA
+        // =========================
+        const response = await fetch(
+            "/worker-attendances"
+        );
+
+        const data = await response.json();
+
+        // =========================
+        // SIMPAN DATA GLOBAL
+        // =========================
+        allAttendances = data;
+
+        // =========================
+        // TAMPILKAN TABLE
+        // =========================
+        renderTable(data);
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert("Gagal mengambil data attendance");
+
+    }
+
+}
+
+
+// =========================
+// RENDER TABLE
+// =========================
+function renderTable(data) {
+
+    const tableBody =
+        document.getElementById(
+            "attendanceTable"
+        );
+
+    tableBody.innerHTML = "";
+
+
+    data.forEach(item => {
+
+        const row = `
+
+            <tr>
+
+                <td>${item.tanggal}</td>
+
+                <td>${item.shift}</td>
+
+                <td>${item.id_pekerja}</td>
+
+                <td>${item.nama}</td>
+
+                <td>${item.vendor}</td>
+
+                <td>${item.lokasi}</td>
+
+            </tr>
+
+        `;
+
+        tableBody.innerHTML += row;
+
+    });
+}
+
+
+// =========================
+// SEARCH REALTIME
+// =========================
+function searchAttendance() {
+
+    // =========================
+    // AMBIL INPUT SEARCH
+    // =========================
+    const keyword = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+
+    // =========================
+    // FILTER DATA
+    // =========================
+    const filtered =
+        allAttendances.filter(item => {
+
+            return (
+
+                item.id_pekerja
+                .toLowerCase()
+                .includes(keyword)
+
+                ||
+
+                item.nama
+                .toLowerCase()
+                .includes(keyword)
+
+            );
+
+        });
+
+
+    // =========================
+    // TAMPILKAN HASIL FILTER
+    // =========================
+    renderTable(filtered);
+}
+
+
+// =========================
+// LOAD SAAT HALAMAN DIBUKA
+// =========================
+loadAttendances();
+
+</script>
+</body>
+</html>

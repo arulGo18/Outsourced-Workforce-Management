@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akun Pengguna</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="sidebar sidebar-akun">
+
+  <div>
+    <div class="sidebar-logo">
+    <img
+        src="logomanajemen.png"
+        alt="CDX Express Logo">
+  </div>
+
+    <div class="menu">
+      <div class="menu-category">AKTIVITAS</div>
+    <a href="dashboard-daftar-id.html">Daftar ID Pekerja</a>
+    <a href="dashboard-aktivasi-id.html" >Aktivasi ID</a>
+    <a href="dashboard-mutasi-id.html">Mutasi ID</a>
+    <div class="menu-category">MANAJEMEN</div>
+    <a href="dashboard-data-pekerja.html">Data Pekerja</a>
+    <a href="dashboard-aktivitas.html" >Riwayat</a>
+    <div class="menu-category">AKUN</div>
+    <a href="dashboard-akun.html" class="active">Akun Pengguna</a>
+    </div>
+  </div>
+
+  <div class="logout">
+    <button onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<div class="main">
+
+  <div class="navbar">
+    <div id="navbarTitle">Akun Vendor</div>
+  </div>
+
+  <div class="title">Akun Pengguna</div>
+
+  <div class="content">
+
+    <div class="left">
+      <h3 id="vendorArea">BPO Area</h3>
+      <div class="avatar">👤</div>
+    </div>
+
+    <div class="card">
+
+      <div class="info">
+        <span class="label">Nama</span>
+        <span class="value" id="namaUser">-</span>
+      </div>
+
+      <div class="info">
+        <span class="label">Vendor</span>
+        <span class="value" id="vendorUser">-</span>
+      </div>
+
+      <div class="info">
+        <span class="label">Lokasi Gudang</span>
+        <span class="value" id="lokasiGudang">-</span>
+      </div>
+
+      <div class="info">
+        <span class="label">Status</span>
+        <span class="value" id="statusUser">-</span>
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// AMBIL DATA USER
+const user = JSON.parse(localStorage.getItem("user"));
+
+// CEK LOGIN
+if (!user) {
+  window.location.href = "login.html";
+}
+
+// SET DATA KE UI
+document.getElementById("namaUser").innerText = user.pic;
+document.getElementById("vendorUser").innerText = user.vendor;
+document.getElementById("lokasiGudang").innerText =user.lokasi_gudang || "-";
+document.getElementById("statusUser").innerText =user.status || "active";
+document.getElementById("vendorArea").innerText = "BPO Area - " + user.vendor;
+document.getElementById("navbarTitle").innerText = "Akun " + user.vendor;
+
+// LOGOUT
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

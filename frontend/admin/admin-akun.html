@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Pengguna - CDX Express</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="imglogo/logomanajemen.png" alt="CDX Express Logo">
+        </div>
+        <div class="menu-category">MANAJEMEN</div>
+        <a href="admin-kebutuhan-plan.html" class="menu-item">Plan Actual</a>
+        <div class="menu-category">AKTIFITAS</div>
+        <a href="admin-verifikasi-id.html" class="menu-item">Verifikasi ID Pekerja</a>
+        <a href="admin-pekerja-vendor.html" class="menu-item">Plan Pekerja Vendor</a>
+        <a href="admin-buffer.html" class="menu-item">Buffer Pekerja Vendor</a>
+        <a href="admin-takeout.html" class="menu-item">Take Out Pekerja</a>
+        <a href="admin-nonaktifkan.html" class="menu-item">Nonaktifkan ID Pekerja</a>
+        <div class="menu-category">RIWAYAT</div>
+        <a href="admin-data-aktivitas.html" class="menu-item">Data Aktifitas</a>
+        <div class="menu-category">AKUN</div>
+        <a href="admin-akun.html" class="menu-item active">Akun Admin</a>
+
+        <a href="login-admin.html" class="logout-btn">Logout</a>
+    </aside>
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-links">
+                <a href="#" class="active">Akun Admin</a>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+            </div>
+        </header>
+        <div class="dashboard-body">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-icon"><i class="fas fa-user"></i></div>
+                    <div>
+                        <div 
+                        class="profile-name"
+                        id="admin_nama">Admin - YOS Sudarso</div>
+                        <div
+                        id="admin_jabatan"
+                        style="color:#666; font-size:14px;">
+                        Staff Administrator</div>
+                    </div>
+                </div>
+                <div class="profile-row"><span class="profile-label">ID</span><span 
+                    class="profile-value"
+                    id="admin_id">ADM001</span></div>
+                <div class="profile-row">
+                    <span class="profile-label">Nama</span>
+                    <span class="profile-value"
+                    id="admin_nama_value"
+                    >Reho</span></div>
+
+                <div class="profile-row"><span class="profile-label">Lokasi</span>
+                    <span class="profile-value"
+                    id="admin_lokasi">
+                    Yos Sudarso</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">Jabatan</span>
+                    <span 
+                    class="profile-value"
+                    id="admin_jabatan_value">
+                    Staff Admin</span>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">Shift/Waktu</span>
+                    <span 
+                    class="profile-label"
+                    id="admin_shift"
+                    >Shift</span>
+                </div>
+
+                <div class="profile-row"><span class="profile-label">Status</span><span class="profile-value" style="color:green; font-weight:bold;">Aktif</span></div>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script>
+
+    // =========================
+    // AMBIL DATA ADMIN
+    // =========================
+    const adminData = JSON.parse(
+
+        localStorage.getItem(
+            "adminData"
+        )
+    );
+
+
+    // =========================
+    // JIKA BELUM LOGIN
+    // =========================
+    if (!adminData) {
+
+        window.location.href =
+        "login-admin.html";
+    }
+
+
+    // =========================
+    // TAMPILKAN DATA
+    // =========================
+    document.getElementById(
+        "admin_nama"
+    ).innerText = adminData.nama;
+
+
+    document.getElementById(
+        "admin_jabatan"
+    ).innerText = adminData.jabatan;
+
+
+    document.getElementById(
+        "admin_id"
+    ).innerText = adminData.admin_id;
+
+
+    document.getElementById(
+        "admin_nama_value"
+    ).innerText = adminData.nama;
+
+
+    document.getElementById(
+        "admin_lokasi"
+    ).innerText = adminData.lokasi;
+
+
+    document.getElementById(
+        "admin_jabatan_value"
+    ).innerText = adminData.jabatan;
+
+
+    document.getElementById(
+        "admin_shift"
+    ).innerText = adminData.shift;
+
+</script>
+
+</body>
+</html>

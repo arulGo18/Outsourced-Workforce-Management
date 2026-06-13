@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pekerja Vendor - CDX Express</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="imglogo/logomanajemen.png" alt="CDX Express Logo">
+        </div>
+        <div class="menu-category">MANAJEMEN</div>
+        <a href="admin-kebutuhan-plan.html" class="menu-item">Plan Actual</a>
+        <div class="menu-category">AKTIFITAS</div>
+        <a href="admin-verifikasi-id.html" class="menu-item">Verifikasi ID Pekerja</a>
+        <a href="admin-pekerja-vendor.html" class="menu-item active">Plan Pekerja Vendor</a>
+        <a href="admin-buffer.html" class="menu-item">Buffer Pekerja Vendor</a>
+        <a href="admin-takeout.html" class="menu-item">Take Out Pekerja</a>
+        <a href="admin-nonaktifkan.html" class="menu-item">Nonaktifkan ID Pekerja</a>
+        <div class="menu-category">RIWAYAT</div>
+        <a href="admin-data-aktivitas.html" class="menu-item">Data Aktifitas</a>
+        <div class="menu-category">AKUN</div>
+        <a href="admin-akun.html" class="menu-item">Akun Admin</a>
+
+        <a href="login-admin.html" class="logout-btn">Logout</a>
+    </aside>
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-links">
+                <a href="#" class="active">Input ID Plan</a>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+            </div>
+        </header>
+        <div class="dashboard-body">
+            <h2 class="page-title">Data Pekerja Vendor</h2>
+            <p class="page-desc">Masukkan Data Pekerja Vendor Berdasarkan Plan Actual dan data sudah di validasi.</p>
+            <div class="form-container">
+                <form>
+
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input
+                            type="text"
+                            id="tanggal"
+                            class="form-control"
+                            placeholder="Masukkan Tanggal (yyyy-mm-dd)">
+                    </div>
+
+                    <div class="form-group"><label>Shift</label>
+                        <select
+                            id="shift"
+                            class="form-control"
+                            onchange="getPlan()">
+                            <option value="">Pilih Shift</option>
+                            <option style="color: black;">Shift 1 (08-16)</option>
+                            <option style="color: black;">Shift 2 (16-00)</option>
+                            <option style="color: black;">Shift 3 (00-08)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Plan Actual</label>
+                        <input
+                            type="text"
+                            id="plan_actual"
+                            class="form-control"
+                            placeholder="Otomatis Setelah Isi tanggal dan Plan"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Agensi</label>
+                        <select
+                            id="agency"
+                            class="form-control">
+                            <option value="">Pilih Agensi</option>
+                            <option style="color: black;">Vendor A</option>
+                            <option style="color: black;">Vendor B</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ID Pekerja</label>
+                        <textarea
+                            id="worker_ids"
+                            class="form-control" 
+                            rows="4" 
+                            placeholder="Masukkan ID Pekerja (bisa banyak)">
+                        </textarea>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-action"
+                        onclick="saveAttendance()">
+                        Konfirmasi
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+
+<script>
+
+// =========================
+// PROTEKSI LOGIN ADMIN
+// =========================
+const adminData = JSON.parse(
+
+    localStorage.getItem(
+        "adminData"
+    )
+);
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!adminData) {
+
+    alert(
+        "Silakan login admin terlebih dahulu"
+    );
+
+    window.location.href =
+    "login-admin.html";
+}
+
+</script>
+
+
+<script>
+
+async function getPlan() {
+
+  // =========================
+  // AMBIL INPUT
+  // =========================
+  const tanggal =
+    document.getElementById("tanggal").value;
+
+  const shift =
+    document.getElementById("shift").value;
+
+
+  // =========================
+  // VALIDASI
+  // =========================
+  if (!tanggal || !shift) {
+
+    return;
+  }
+
+
+  try {
+
+    // =========================
+    // FETCH KE BACKEND
+    // =========================
+    const response = await fetch(
+
+      `/worker-plan?tanggal=${tanggal}&shift=${encodeURIComponent(shift)}`
+    );
+
+    const data = await response.json();
+
+
+    // =========================
+    // VALIDASI DATA
+    // =========================
+    if (data.message) {
+
+      alert(data.message);
+
+      document.getElementById("plan_actual").value = "";
+
+      return;
+    }
+
+
+    // =========================
+    // TAMPILKAN PLAN ACTUAL
+    // =========================
+    document.getElementById("plan_actual").value =
+      data.total_kebutuhan;
+
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Gagal koneksi ke server");
+
+  }
+
+}
+
+</script>
+
+<script>
+
+async function saveAttendance() {
+
+  // =========================
+  // AMBIL DATA FORM
+  // =========================
+  const tanggal =
+    document.getElementById("tanggal").value;
+
+  const shift =
+    document.getElementById("shift").value;
+
+  const vendor =
+    document.getElementById("agency").value;
+
+  const lokasi = "YOS SUDARSO";
+
+
+  // =========================
+  // AMBIL TEXTAREA ID
+  // =========================
+  const workerText =
+    document.getElementById("worker_ids").value;
+
+
+  // =========================
+  // UBAH MENJADI ARRAY
+  // =========================
+  const worker_ids = workerText
+    .split("\n")
+    .map(id => id.trim())
+    .filter(id => id !== "");
+
+
+  // =========================
+  // VALIDASI
+  // =========================
+  if (
+    !tanggal ||
+    !shift ||
+    !vendor ||
+    worker_ids.length === 0
+  ) {
+
+    alert("Lengkapi data terlebih dahulu");
+
+    return;
+  }
+
+
+  try {
+
+    // =========================
+    // FETCH KE BACKEND
+    // =========================
+    const response = await fetch(
+
+      "/create-worker-attendance",
+
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          tanggal,
+          shift,
+          vendor,
+          lokasi,
+          worker_ids
+        })
+      }
+    );
+
+
+    const result = await response.json();
+
+    console.log(result);
+
+    alert(result.message);
+
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Gagal koneksi ke server");
+
+  }
+
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Pekerja</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img
+        src="logomanajemen.png"
+        alt="CDX Express Logo">
+  </div>
+
+  <div class="menu">
+    <div class="menu-category">AKTIVITAS</div>
+    <a href="dashboard-daftar-id.html" >Daftar ID Pekerja</a>
+    <a href="dashboard-aktivasi-id.html">Aktivasi ID</a>
+    <a href="dashboard-mutasi-id.html">Mutasi ID</a>
+    <div class="menu-category">MANAJEMEN</div>
+    <a href="dashboard-data-pekerja.html" class="active">Data Pekerja</a>
+    <a href="dashboard-aktivitas.html">Riwayat</a>
+    <div class="menu-category">AKUN</div>
+    <a href="dashboard-akun.html">Akun Pengguna</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="navbar">
+    <div>Data Pekerja Vendor</div>
+    <div>👤 Vendor</div>
+  </div>
+
+  <div class="card">
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+
+      <input type="text" id="searchInput" placeholder="Cari Nama atau ID">
+
+      <select id="filterDept">
+        <option value="">Semua Department</option>
+        <option>Cache Oprator</option>
+        <option>IT Oprator</option>
+        <option>SOC Oprator</option>
+        <option>FH Oprator</option>
+        <option>Return Oprator</option>
+        <option>Admin</option>
+      </select>
+
+      <select id="filterLokasi">
+        <option value="">Semua Lokasi</option>
+        <option>Cakung 1</option>
+        <option>Cakung 2</option>
+        <option>Cakung 4</option>
+        <option>Cakung 5</option>
+        <option>Yos Sudarso Return</option>
+      </select>
+
+      <select id="filterStatus">
+        <option value="">Semua Status</option>
+        <option>active</option>
+        <option>inactive</option>
+      </select>
+
+    </div>
+
+    <!-- TABLE -->
+    <table id="workerTable">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nama</th>
+          <th>Lokasi</th>
+          <th>PIC Area</th>
+          <th>Department</th>
+          <th>Status</th>
+          <th>Tipe Kontrak</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- DATA DARI BACKEND -->
+      </tbody>
+
+    </table>
+
+    <div class="pagination">
+      &lt; 1 2 3 &gt;
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+let allWorkers = [];
+
+
+// ==========================
+// LOAD DATA WORKERS
+// ==========================
+const user = JSON.parse(localStorage.getItem("user"));
+fetch(`/workers?vendor=${user.vendor}`)
+
+.then(res => res.json())
+.then(data => {
+
+  allWorkers = data;
+
+  renderTable(data);
+
+})
+.catch(() => {
+  alert("Gagal mengambil data worker");
+});
+
+const picAreaMap = {
+
+  "Vendor A": {
+
+    "Cakung 1": "Alam",
+    "Cakung 2": "Feri",
+    "Cakung 4": "Nano",
+    "Cakung 5": "Arhan",
+    "Yos Sudarso Return": "Ilyas"
+
+  },
+
+  "Vendor B": {
+
+    "Cakung 1": "Rizky",
+    "Cakung 2": "Daffa",
+    "Cakung 4": "Bagas",
+    "Cakung 5": "Rama",
+    "Yos Sudarso Return": "Fahmi"
+
+  }
+
+};
+// ==========================
+// RENDER TABLE
+// ==========================
+function renderTable(data) {
+
+  const tbody = document.querySelector("#workerTable tbody");
+
+  tbody.innerHTML = "";
+
+  data.forEach(worker => {
+
+    let statusBadge = "";
+
+    if (worker.status === "active") {
+      statusBadge = `<span class="badge success">Active</span>`;
+    } else {
+      statusBadge = `<span class="badge warning">Inactive</span>`;
+    }
+
+    const row = `
+      <tr>
+        <td>${worker.id_pekerja}</td>
+        <td>${worker.nama}</td>
+        <td>${worker.lokasi}</td>
+        <td>${picAreaMap[worker.vendor]?.[worker.lokasi] || "-"}</td>
+        <td>${worker.departemen}</td>
+        <td>${statusBadge}</td>
+        <td>${worker.tipe_kontrak}</td>
+
+        <td>
+          <button class="btn-detail"
+          onclick="showDetail('${worker.id_pekerja}')">
+            Detail
+          </button>
+        </td>
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
+
+  });
+
+}
+
+
+// ==========================
+// FILTER SEARCH
+// ==========================
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", applyFilters);
+
+
+// ==========================
+// FILTER DEPARTEMEN
+// ==========================
+const filterDept = document.getElementById("filterDept");
+
+filterDept.addEventListener("change", applyFilters);
+
+
+// ==========================
+// FILTER LOKASI
+// ==========================
+const filterLokasi = document.getElementById("filterLokasi");
+
+filterLokasi.addEventListener("change", applyFilters);
+
+
+// ==========================
+// FILTER STATUS
+// ==========================
+const filterStatus = document.getElementById("filterStatus");
+
+filterStatus.addEventListener("change", applyFilters);
+
+
+// ==========================
+// APPLY FILTER
+// ==========================
+function applyFilters() {
+
+  const search = searchInput.value.toLowerCase();
+
+  const dept = filterDept.value.toLowerCase();
+
+  const lokasi = filterLokasi.value.toLowerCase();
+
+  const status = filterStatus.value.toLowerCase();
+
+  const filtered = allWorkers.filter(worker => {
+
+    const matchSearch =
+      worker.nama.toLowerCase().includes(search) ||
+      worker.id_pekerja.toLowerCase().includes(search);
+
+    const matchDept =
+      dept === "" ||
+      worker.departemen.toLowerCase() === dept;
+
+    const matchLokasi =
+      lokasi === "" ||
+      worker.lokasi.toLowerCase() === lokasi;
+
+    const matchStatus =
+      status === "" ||
+      worker.status.toLowerCase() === status;
+
+    return (
+      matchSearch &&
+      matchDept &&
+      matchLokasi &&
+      matchStatus
+    );
+
+  });
+
+  renderTable(filtered);
+
+}
+
+function showDetail(id_pekerja) {
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  fetch(`/worker-detail/${id_pekerja}?vendor=${user.vendor}`)
+  .then(res => res.json())
+  .then(data => {
+
+    const content = `
+      <p><b>ID:</b> ${data.id_pekerja}</p>
+      <p><b>Status:</b> ${data.status}</p>
+
+      <hr>
+
+      <p><b>Nama:</b> ${data.nama}</p>
+      <p><b>NIK:</b> ${data.nik}</p>
+      <p><b>No KK:</b> ${data.no_kk}</p>
+      <p><b>Jenis Kelamin:</b> ${data.jenis_kelamin}</p>
+      <p><b>Alamat:</b> ${data.alamat}</p>
+      <p><b>Email:</b> ${data.email}</p>
+      <p><b>No HP:</b> ${data.no_hp}</p>
+
+      <hr>
+
+      <p><b>Vendor:</b> ${data.vendor}</p>
+      <p><b>Departemen:</b> ${data.departemen}</p>
+      <p><b>Tipe Kontrak:</b> ${data.tipe_kontrak}</p>
+      <p><b>Lokasi:</b> ${data.lokasi}</p>
+
+      <hr>
+
+      <p><b>Nama Rekening:</b> ${data.nama_rekening}</p>
+      <p><b>No Rekening:</b> ${data.no_rekening}</p>
+      <p><b>Bank:</b> ${data.bank}</p>
+    `;
+
+    document.getElementById("detailContent").innerHTML = content;
+
+    document.getElementById("detailModal").style.display = "block";
+
+  })
+  .catch(() => {
+    alert("Gagal mengambil detail");
+  });
+
+}
+
+
+function closeModal() {
+  document.getElementById("detailModal").style.display = "none";
+}
+</script>
+
+
+<!-- MODAL DETAIL -->
+<div id="detailModal" class="modal" style="display:none;">
+
+  <div class="modal-content">
+
+    <span class="close" onclick="closeModal()">&times;</span>
+
+    <h3>Detail Pekerja</h3>
+
+    <div id="detailContent"></div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

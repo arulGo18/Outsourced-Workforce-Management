@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Daftar ID Pekerja</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img
+        src="logomanajemen.png"
+        alt="CDX Express Logo">
+  </div>
+
+  <div class="menu">
+    <div class="menu-category">AKTIVITAS</div>
+    <a href="dashboard-daftar-id.html" class="active" >Daftar ID Pekerja</a>
+    <a href="dashboard-aktivasi-id.html">Aktivasi ID</a>
+    <a href="dashboard-mutasi-id.html">Mutasi ID</a>
+    <div class="menu-category">MANAJEMEN</div>
+    <a href="dashboard-data-pekerja.html">Data Pekerja</a>
+    <a href="dashboard-aktivitas.html">Riwayat</a>
+    <div class="menu-category">AKUN</div>
+    <a href="dashboard-akun.html">Akun Pengguna</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="navbar">
+    <div class="title">Daftar ID Pekerja</div>
+
+    <div class="profile">
+      <span>👤 Vendor</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Formulir ID Pekerja</h3>
+
+    <div class="form-grid">
+
+      <!-- DATA UTAMA -->
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input id="nama" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>NIK</label>
+        <input 
+        id="nik"
+        type="text"
+        name="nik"
+        placeholder="Masukkan NIK"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>No KK</label>
+        <input id="no_kk" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>Jenis Kelamin</label>
+        <select id="jenis_kelamin">
+          <option value="">Pilih</option>
+          <option>Laki-laki</option>
+          <option>Perempuan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Alamat</label>
+        <input id="alamat" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email">
+      </div>
+
+      <div class="form-group">
+        <label>No Telepon</label>
+        <input id="no_hp" type="text">
+      </div>
+
+      <!-- DATA REKENING -->
+      <div class="form-group">
+        <label>Nama Pemilik Rekening</label>
+        <input id="nama_rekening" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>Nomor Rekening</label>
+        <input id="no_rekening" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>Nama Bank</label>
+        <select id="bank">
+          <option value="">Pilih</option>
+          <option>Bank Mandiri</option>
+          <option>Bank BCA</option>
+          <option>Bank BRI</option>
+          <option>Seabank</option>
+        </select>
+      </div>
+
+      <!-- DATA PEKERJAAN -->
+      <div class="form-group">
+        <label>Agency</label>
+        <select id="agency"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Tipe Kontrak</label>
+        <select id="tipe_kontrak">
+          <option value="">Pilih</option>
+          <option>Daily Worker - Vendor</option>
+          <option>Contract Month - Vendor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Departemen</label>
+        <select id="departemen">
+          <option value="">Pilih</option>
+          <option>Cache Oprator</option>
+          <option>IT Oprator</option>
+          <option>SOC Oprator</option>
+          <option>FH Oprator</option>
+          <option>Return Oprator</option>
+          <option>Admin</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button 
+    id="btnDaftar"
+    type="button" 
+    class="btn" 
+    onclick="buatID()"
+    >Buat ID</button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+// =========================
+// PROTEKSI LOGIN
+// =========================
+const user = JSON.parse(
+
+    localStorage.getItem(
+        "user"
+    )
+);
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!user) {
+
+    alert(
+        "Silakan login terlebih dahulu"
+    );
+
+    window.location.href =
+    "dashboard-login.html";
+}
+
+</script>
+
+<script>
+
+function buatID() {
+
+  const btn = document.querySelector(".btn");
+  btn.disabled = true;
+  
+  const data = {
+    nama: document.getElementById("nama").value,
+    nik: document.getElementById("nik").value,
+    no_kk: document.getElementById("no_kk").value,
+    jenis_kelamin: document.getElementById("jenis_kelamin").value,
+    alamat: document.getElementById("alamat").value,
+    email: document.getElementById("email").value,
+    no_hp: document.getElementById("no_hp").value,
+    nama_rekening: document.getElementById("nama_rekening").value,
+    no_rekening: document.getElementById("no_rekening").value,
+    bank: document.getElementById("bank").value,
+    // 🔥 FIX DI SINI
+    vendor: document.getElementById("agency").value,
+    tipe_kontrak: document.getElementById("tipe_kontrak").value,
+    departemen: document.getElementById("departemen").value
+  };
+
+  if (!data.nama || !data.nik) {
+      alert("Nama dan NIK wajib diisi!");
+      return;
+  }
+
+    // =========================
+    // VALIDASI FIELD WAJIB
+    // =========================
+    if (
+
+        !data.nama ||
+        !data.nik ||
+        !data.no_kk ||
+        !data.jenis_kelamin ||
+        !data.alamat ||
+        !data.no_hp ||
+        !data.vendor ||
+        !data.tipe_kontrak ||
+        !data.departemen
+
+    ) {
+
+        alert(
+            "Harap lengkapi data pekerja terlebih dahulu"
+        );
+
+    btn.disabled = false;
+
+    return;
+    }
+
+  fetch("/create-worker", {  // 🔥 FIX ENDPOINT
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+      console.log(result); // 🔥 DEBUG
+      if (result.id_pekerja) {
+          alert(`Berhasil dibuat!\nID: ${result.id_pekerja}`);
+      } else {
+          alert("Response tidak sesuai");
+      }
+  })
+  .catch(() => {
+      alert("Gagal koneksi ke server");
+  });
+}
+</script>
+
+<script>
+
+// =========================
+// AMBIL DATA LOGIN
+// =========================
+const userData =
+    localStorage.getItem("user");
+
+
+// =========================
+// JIKA BELUM LOGIN
+// =========================
+if (!userData) {
+
+    window.location.href =
+    "dashboard-login.html";
+
+} else {
+
+    const user =
+        JSON.parse(userData);
+
+    const agencySelect =
+        document.getElementById(
+            "agency"
+        );
+
+
+    // =========================
+    // VENDOR A
+    // =========================
+    if (user.vendor === "Vendor A") {
+
+        agencySelect.innerHTML = `
+
+            <option value="">
+                Pilih Agency
+            </option>
+
+            <option value="Vendor A">
+                Vendor A
+            </option>
+
+            <option value="Vendor A - GTL">
+                Vendor A - GTL
+            </option>
+
+        `;
+    }
+
+
+    // =========================
+    // VENDOR B
+    // =========================
+    else if (
+        user.vendor ===
+        "Vendor B"
+    ) {
+
+        agencySelect.innerHTML = `
+
+            <option value="">
+                Pilih Agency
+            </option>
+
+            <option value="Vendor B">
+                Vendor B
+            </option>
+
+            <option value="Vendor B - GTL">
+                Vendor B - GTL
+            </option>
+
+        `;
+    }
+}
+
+document
+
+
+</script>
+
+</body>
+</html>
