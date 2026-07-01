@@ -111,7 +111,7 @@ PostgreSQL Database
 ## Administrator Dashboard
 
 <p align="center">
-<img src="images/admin-dashboard.png" width="900">
+  <img src="dashboard/admin.png" width="900">
 </p>
 
 ---
@@ -119,7 +119,7 @@ PostgreSQL Database
 ## Vendor PIC Dashboard
 
 <p align="center">
-<img src="images/vendor-dashboard.png" width="900">
+  <img src="dashboard/vendor.png" width="900">
 </p>
 
 ---
@@ -127,7 +127,7 @@ PostgreSQL Database
 ## FastAPI Server Running
 
 <p align="center">
-<img src="images/server-running.png" width="900">
+  <img src="dashboard/running.png" width="900">
 </p>
 
 # Requirements
